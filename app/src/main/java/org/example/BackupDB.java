@@ -9,31 +9,48 @@ import picocli.CommandLine.Option;
 @Command
 public class BackupDB implements Callable<Integer> {
 
-  @Option(names = { "--host", "-host", "-h" })
+  @Option(names = { "--help", "-help" }, usageHelp = true, description = "display help message")
+  private boolean usageHelpRequested;
+
+  @Option(names = { "--version", "-version" }, versionHelp = true, description = "display version info")
+  private boolean versionInfoRequested;
+
+  @Option(names = { "--host", "-host" })
   private String host;
 
   @Option(names = { "--port", "-port" })
   private int port;
 
-  @Option(names = { "--username", "-user", "-u" })
+  @Option(names = { "--username", "-user" })
   private String username;
 
-  @Option(names = { "--password", "-pass", "-p" })
+  @Option(names = { "--password", "-pass" })
   private String password;
 
   @Option(names = { "--database", "-db" })
   private String dbName;
 
-  @Option(names = { "--destination", "-dest", "-d" })
+  @Option(names = { "--destination", "-dest" })
   private String outputDir;
 
-  @Option(names = { "--provider" })
+  @Option(names = { "--provider", "-prov" })
   private String provider;
 
   @Override
   public Integer call() throws Exception {
     DBCredentials credentials = new DBCredentials(host, port, username, password, dbName);
-    Connection dbConnection = ConnectionProxy.getConnection(credentials, provider);
+    try {
+      Connection dbConnection = ConnectionProxy.getConnection(credentials, provider);
+
+      if (dbConnection instanceof Connection) {
+        System.out.println("Valid connection");
+      }
+
+      dbConnection.close();
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+      return 0;
+    }
     return 0;
   }
 }
