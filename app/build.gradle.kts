@@ -24,6 +24,7 @@ dependencies {
     // This dependency is used by the application.
     implementation(libs.guava)
     implementation("info.picocli:picocli:4.7.7")
+    implementation("com.mysql:mysql-connector-j:9.7.0")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
