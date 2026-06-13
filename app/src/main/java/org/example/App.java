@@ -1,6 +1,6 @@
 package org.example;
 
-import picocli.CommandLine;;
+import picocli.CommandLine;
 
 public class App {
     public static void main(String[] args) {
