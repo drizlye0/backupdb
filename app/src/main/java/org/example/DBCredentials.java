@@ -5,9 +5,8 @@ package org.example;
  */
 public record DBCredentials(
     String host,
-    int port, 
+    int port,
     String username,
     String password,
-    String dbName
-    ) {
+    String dbName) {
 }

@@ -1,7 +1,10 @@
 package org.example;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
+
+import org.example.Providers.MySQLProvider;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -46,7 +49,16 @@ public class BackupDB implements Callable<Integer> {
         System.out.println("Valid connection");
       }
 
+      MySQLProvider mysql = new MySQLProvider(dbConnection);
+      mysql.ShowCreateTable("user");
+      mysql.ShowInsertInto("user");
+      ArrayList<String> tables = mysql.ShowTables(dbName);
+      for (String table : tables ) {
+        System.out.println(table);
+      }
+
       dbConnection.close();
+
     } catch (Exception e) {
       System.out.println(e.getMessage());
       return 0;
