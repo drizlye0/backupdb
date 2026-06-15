@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 public interface DatabaseProvider {
   public ArrayList<String> ShowTables(String database);
-  public void ShowCreateTable(String table);
-  public void ShowInsertInto(String table);
+
+  public String ShowCreateTable(String table);
+
+  public String ShowInsertInto(String table);
 }

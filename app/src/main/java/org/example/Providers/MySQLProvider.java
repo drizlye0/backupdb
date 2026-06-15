@@ -5,7 +5,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-
 import org.example.DatabaseProvider;
 
 /**
@@ -18,7 +17,8 @@ public class MySQLProvider implements DatabaseProvider {
     this.db = db;
   }
 
-  public void ShowCreateTable(String table) {
+  @Override
+  public String ShowCreateTable(String table) {
     String sql = "SHOW CREATE TABLE " + table;
     try {
       PreparedStatement ps = db.prepareStatement(sql);
@@ -30,14 +30,18 @@ public class MySQLProvider implements DatabaseProvider {
 
         System.out.println("Table name: " + tableName);
         System.out.println("Statement: " + createSt);
+        return createSt;
       }
     } catch (Exception e) {
       System.out.println(e.getMessage());
       System.exit(0);
     }
+
+    return "";
   }
 
-  public void ShowInsertInto(String table) {
+  @Override
+  public String ShowInsertInto(String table) {
     try {
       DatabaseMetaData meta = db.getMetaData();
       ResultSet columnsRs = meta.getColumns(null, null, table, null);
@@ -81,12 +85,17 @@ public class MySQLProvider implements DatabaseProvider {
 
       String resultQuery = String.format("INSERT INTO %s(%s) \n VALUES \n %s", table, columns, values);
       System.out.println(resultQuery);
+
+      return resultQuery;
     } catch (Exception e) {
       System.out.println(e.getMessage());
       System.exit(0);
     }
+
+    return "";
   }
 
+  @Override
   public ArrayList<String> ShowTables(String database) {
     ArrayList<String> tables = new ArrayList<String>();
 
@@ -98,12 +107,12 @@ public class MySQLProvider implements DatabaseProvider {
 
       ResultSet rs = ps.executeQuery();
 
-      while(rs.next()) {
+      while (rs.next()) {
         String t = rs.getString("tables");
         tables.add(t);
       }
 
-    }catch(Exception e) {
+    } catch (Exception e) {
       System.out.println(e.getMessage());
       System.exit(0);
     }

@@ -1,13 +1,14 @@
 package org.example;
 
+import java.nio.file.Path;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
 import org.example.Providers.MySQLProvider;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 @Command
 public class BackupDB implements Callable<Integer> {
@@ -39,23 +40,19 @@ public class BackupDB implements Callable<Integer> {
   @Option(names = { "--provider", "-prov" })
   private String provider;
 
+  @Parameters
+  private Path path;
+
   @Override
   public Integer call() throws Exception {
     DBCredentials credentials = new DBCredentials(host, port, username, password, dbName);
     try {
       Connection dbConnection = ConnectionProxy.getConnection(credentials, provider);
-
-      if (dbConnection instanceof Connection) {
-        System.out.println("Valid connection");
-      }
-
       MySQLProvider mysql = new MySQLProvider(dbConnection);
-      mysql.ShowCreateTable("user");
-      mysql.ShowInsertInto("user");
-      ArrayList<String> tables = mysql.ShowTables(dbName);
-      for (String table : tables ) {
-        System.out.println(table);
-      }
+      NioStorage store = new NioStorage();
+
+      BackupService backupService = new BackupService(mysql, store);
+      backupService.BackupAllTables(dbName, path);
 
       dbConnection.close();
 
