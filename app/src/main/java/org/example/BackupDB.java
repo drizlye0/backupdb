@@ -4,7 +4,9 @@ import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.concurrent.Callable;
 
-import org.example.Providers.MySQLProvider;
+import org.example.database.ConnectionProxy;
+import org.example.database.DBCredentials;
+import org.example.database.providers.MySQLProvider;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -40,7 +42,7 @@ public class BackupDB implements Callable<Integer> {
   @Option(names = { "--provider", "-prov" })
   private String provider;
 
-  @Parameters
+  @Parameters(defaultValue = ".")
   private Path path;
 
   @Override

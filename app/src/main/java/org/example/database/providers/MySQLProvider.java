@@ -1,11 +1,14 @@
-package org.example.Providers;
+package org.example.database.providers;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import org.example.DatabaseProvider;
+
+import javax.xml.crypto.Data;
+
+import org.example.database.DatabaseProvider;
 
 /**
  * MySQLProvider
@@ -63,6 +66,11 @@ public class MySQLProvider implements DatabaseProvider {
       ResultSet dataRs = ps.executeQuery();
 
       StringBuilder values = new StringBuilder();
+
+      if (!dataRs.next()) {
+        return "";
+      }
+
       while (dataRs.next()) {
         if (values.length() > 0) {
           values.append(" ");

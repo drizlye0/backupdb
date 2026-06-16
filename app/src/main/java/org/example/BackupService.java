@@ -2,6 +2,8 @@ package org.example;
 
 import java.util.ArrayList;
 import java.nio.file.Path;
+import org.example.database.DatabaseProvider;
+
 
 public class BackupService {
   private DatabaseProvider dbProvider;
@@ -14,6 +16,10 @@ public class BackupService {
 
   public void BackupAllTables(String dbName, Path path) {
     Path folderPath = this.store.CreateFolder("tables", path);
+    if (folderPath == null) {
+      System.out.println("Folder Path is null");
+      return;
+    }
 
     ArrayList<String> tables = this.dbProvider.ShowTables(dbName);
     for (String table : tables) {
