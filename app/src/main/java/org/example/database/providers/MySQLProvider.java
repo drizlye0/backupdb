@@ -5,9 +5,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-
-import javax.xml.crypto.Data;
-
 import org.example.database.DatabaseProvider;
 
 /**
