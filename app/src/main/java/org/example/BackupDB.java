@@ -6,6 +6,7 @@ import java.util.concurrent.Callable;
 
 import org.example.database.ConnectionProxy;
 import org.example.database.DBCredentials;
+import org.example.database.DatabaseProvider;
 import org.example.database.providers.MySQLProvider;
 
 import picocli.CommandLine.Command;
@@ -21,47 +22,50 @@ public class BackupDB implements Callable<Integer> {
   @Option(names = { "--version", "-version" }, versionHelp = true, description = "display version info")
   private boolean versionInfoRequested;
 
-  @Option(names = { "--host", "-host" })
+  @Option(names = { "--host", "-host" }, description = "database host")
   private String host;
 
-  @Option(names = { "--port", "-port" })
+  @Option(names = { "--port", "-port" }, description = "database port")
   private int port;
 
-  @Option(names = { "--username", "-user" })
+  @Option(names = { "--username", "-user" }, description = "database username")
   private String username;
 
-  @Option(names = { "--password", "-pass" })
+  @Option(names = { "--password", "-pass" }, description = "database password")
   private String password;
 
-  @Option(names = { "--database", "-db" })
+  @Option(names = { "--database", "-db" }, description = "database name")
   private String dbName;
 
-  @Option(names = { "--destination", "-dest" })
-  private String outputDir;
-
-  @Option(names = { "--provider", "-prov" })
+  @Option(names = { "--provider", "-prov" }, description = "database manager provider")
   private String provider;
 
-  @Parameters(defaultValue = ".")
+  @Parameters(defaultValue = ".", description = "path of result files")
   private Path path;
 
   @Override
   public Integer call() throws Exception {
     DBCredentials credentials = new DBCredentials(host, port, username, password, dbName);
-    try {
-      Connection dbConnection = ConnectionProxy.getConnection(credentials, provider);
-      MySQLProvider mysql = new MySQLProvider(dbConnection);
+
+    try (Connection conn = ConnectionProxy.getConnection(credentials, provider)) {
+      DatabaseProvider db = getDatabaseProvider(provider, conn);
       NioStorage store = new NioStorage();
 
-      BackupService backupService = new BackupService(mysql, store);
+      BackupService backupService = new BackupService(db, store);
       backupService.BackupAllTables(dbName, path);
-
-      dbConnection.close();
-
     } catch (Exception e) {
       System.out.println(e.getMessage());
-      return 0;
+      return 1;
     }
+
     return 0;
+  }
+
+  private DatabaseProvider getDatabaseProvider(String provider, Connection conn) {
+    switch (provider.toLowerCase()) {
+      case "mysql" -> new MySQLProvider(conn);
+    }
+
+    return null;
   }
 }
