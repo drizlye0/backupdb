@@ -15,7 +15,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
-@Command
+@Command(name = "backupdb", header = "cli utility for create backups for your database schemas", version = "1.0.0", usageHelpAutoWidth = true)
 public class BackupDB implements Callable<Integer> {
 
   @Option(names = { "--help", "-help" }, usageHelp = true, description = "display help message")

@@ -5,6 +5,7 @@ import picocli.CommandLine;
 public class App {
   public static void main(String[] args) {
     CommandLine commandLine = new CommandLine(new BackupDB());
+    commandLine.getCommandSpec().usageMessage().longOptionsMaxWidth(60);
 
     commandLine.parseArgs(args);
     if (commandLine.isUsageHelpRequested()) {
