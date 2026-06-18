@@ -9,10 +9,12 @@ public class App {
     commandLine.parseArgs(args);
     if (commandLine.isUsageHelpRequested()) {
       commandLine.usage(System.out);
+      return;
     }
 
     if (commandLine.isVersionHelpRequested()) {
       commandLine.printVersionHelp(System.out);
+      return;
     }
 
     commandLine.execute(args);
