@@ -43,7 +43,7 @@ public class PostgreSQLProvider implements DatabaseProvider {
             information_schema.columns
         WHERE
             table_schema = 'public' -- Change if using a custom schema
-            AND table_name = '?'
+            AND table_name = ?
         ORDER BY
             ordinal_position;
             """;
