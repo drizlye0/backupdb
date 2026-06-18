@@ -12,6 +12,7 @@ public enum Provider {
     return switch (value.toLowerCase()) {
       case "mysql" -> MYSQL;
       case "postgresql" -> POSTGRESQL;
+      case "postgres" -> POSTGRESQL;
       case "sqlite" -> SQLITE;
       default -> throw new IllegalArgumentException("Unknow DB: " + value);
     };
