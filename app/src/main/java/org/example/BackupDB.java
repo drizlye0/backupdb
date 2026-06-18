@@ -7,7 +7,9 @@ import java.util.concurrent.Callable;
 import org.example.database.ConnectionProxy;
 import org.example.database.DBCredentials;
 import org.example.database.DatabaseProvider;
+import org.example.database.Provider;
 import org.example.database.providers.MySQLProvider;
+import org.example.database.providers.PostgreSQLProvider;
 
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -38,7 +40,7 @@ public class BackupDB implements Callable<Integer> {
   private String dbName;
 
   @Option(names = { "--provider", "-prov" }, description = "database manager provider")
-  private String provider;
+  private String prov;
 
   @Parameters(defaultValue = ".", description = "path of result files")
   private Path path;
@@ -47,6 +49,7 @@ public class BackupDB implements Callable<Integer> {
   public Integer call() throws Exception {
     DBCredentials credentials = new DBCredentials(host, port, username, password, dbName);
 
+    Provider provider = Provider.fromString(prov);
     try (Connection conn = ConnectionProxy.getConnection(credentials, provider)) {
       DatabaseProvider db = getDatabaseProvider(provider, conn);
       NioStorage store = new NioStorage();
@@ -61,11 +64,11 @@ public class BackupDB implements Callable<Integer> {
     return 0;
   }
 
-  private DatabaseProvider getDatabaseProvider(String provider, Connection conn) {
-    switch (provider.toLowerCase()) {
-      case "mysql" -> new MySQLProvider(conn);
-    }
-
-    return null;
+  private DatabaseProvider getDatabaseProvider(Provider provider, Connection conn) {
+    return switch (provider) {
+      case POSTGRESQL -> new PostgreSQLProvider(conn);
+      case MYSQL -> new MySQLProvider(conn);
+      default -> null;
+    };
   }
 }
