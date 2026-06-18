@@ -24,7 +24,9 @@ public class PostgreSQLProvider implements DatabaseProvider {
     String typeLength = rs.getString("max_length");
     String isNull = rs.getString("is_nullable").equalsIgnoreCase("YES") ? "NULL" : "NOT NULL";
 
-    if (typeLength.equalsIgnoreCase("NULL")) {
+    if (typeLength != null &&
+        typeLength.length() > 0 &&
+        typeLength.equalsIgnoreCase("NULL")) {
       return String.format("%s %s %s", columnName, dataType, isNull);
     }
 
@@ -78,8 +80,29 @@ public class PostgreSQLProvider implements DatabaseProvider {
 
   @Override
   public ArrayList<String> ShowTables(String database) {
-    // TODO Auto-generated method stub
-    return null;
+    String sql = """
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+        AND table_type = 'BASE TABLE';
+            """;
+
+    ArrayList<String> tables = new ArrayList<String>();
+
+    try {
+      PreparedStatement st = conn.prepareStatement(sql);
+      ResultSet rs = st.executeQuery();
+
+      while (rs.next()) {
+        tables.add(rs.getString("table_name"));
+      }
+
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+      System.exit(0);
+    }
+
+    return tables;
   }
 
 }

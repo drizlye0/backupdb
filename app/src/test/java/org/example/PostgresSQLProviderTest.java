@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import org.example.database.ConnectionProxy;
 import org.example.database.DBCredentials;
@@ -28,7 +29,21 @@ public class PostgresSQLProviderTest {
       assertNotNull(query);
       System.out.println(query);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      System.err.println(e.getMessage());
+    }
+  }
+
+  @Test
+  void testShowTables() {
+    try (Connection conn = getDBConnection()) {
+      assertNotNull(conn);
+
+      PostgreSQLProvider provider = new PostgreSQLProvider(conn);
+      ArrayList<String> tables = provider.ShowTables("backupdb");
+
+      assertNotNull(tables);
+    } catch (Exception e) {
+
     }
   }
 }
