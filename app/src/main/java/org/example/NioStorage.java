@@ -1,5 +1,6 @@
 package org.example;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,18 +10,18 @@ public class NioStorage implements FileStore {
   public Path CreateFolder(String name, Path path) {
     try {
       Path baseDir = (path == null) ? Paths.get("").toAbsolutePath() : path;
+      if (Files.notExists(baseDir)) {
+        throw new IllegalArgumentException("Invalid path: " + path);
+      }
       Path p = baseDir.resolve(name);
       if (Files.notExists(p)) {
         Files.createDirectory(p);
       }
 
       return p;
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      System.exit(0);
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage());
     }
-
-    return null;
   }
 
   @Override
@@ -32,8 +33,7 @@ public class NioStorage implements FileStore {
       Path p = baseDir.resolve(fileName);
       Files.write(p, content.getBytes());
     } catch (Exception e) {
-      System.out.println(e.getMessage());
-      System.exit(0);
+      throw new RuntimeException(e.getMessage());
     }
   }
 

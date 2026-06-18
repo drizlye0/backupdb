@@ -15,12 +15,8 @@ public class BackupService {
 
   public void BackupAllTables(String dbName, Path path) {
     Path folderPath = this.store.CreateFolder("tables", path);
-    if (folderPath == null) {
-      System.out.println("Folder Path is null");
-      return;
-    }
-
     ArrayList<String> tables = this.dbProvider.ShowTables(dbName);
+
     for (String table : tables) {
       String createSt = this.dbProvider.ShowCreateTable(table);
 
