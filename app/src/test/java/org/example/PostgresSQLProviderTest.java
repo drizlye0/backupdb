@@ -1,0 +1,34 @@
+package org.example;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.example.database.ConnectionProxy;
+import org.example.database.DBCredentials;
+import org.example.database.Provider;
+import org.example.database.providers.PostgreSQLProvider;
+import org.junit.jupiter.api.Test;
+
+public class PostgresSQLProviderTest {
+
+  Connection getDBConnection() throws SQLException {
+    DBCredentials credentials = new DBCredentials("localhost", 5432, "dbuser", "dbpassword", "backupdb");
+    return ConnectionProxy.getConnection(credentials, Provider.POSTGRESQL);
+  }
+
+  @Test
+  void testShowCreateTable() {
+    try (Connection conn = getDBConnection()) {
+      assertNotNull(conn);
+      PostgreSQLProvider provider = new PostgreSQLProvider(conn);
+
+      String query = provider.ShowCreateTable("users");
+      assertNotNull(query);
+      System.out.println(query);
+    } catch (Exception e) {
+      System.out.println(e.getMessage());
+    }
+  }
+}
