@@ -25,9 +25,9 @@ public class ConnectionProxy {
   }
 
   private static Connection getMySQLConnection(DBCredentials credentials) throws SQLException {
-    String url = String.format("jdbc:mysql://%s:%s@%s:%d/%s", credentials.username(), credentials.password(),
-        credentials.host(), credentials.port(), credentials.dbName());
+    String url = String.format("jdbc:mysql://%s:%d/%s", credentials.host(), credentials.port(),
+        credentials.dbName());
 
-    return DriverManager.getConnection(url);
+    return DriverManager.getConnection(url, credentials.username(), credentials.password());
   }
 }
