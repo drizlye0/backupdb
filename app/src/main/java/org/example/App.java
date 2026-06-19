@@ -7,6 +7,11 @@ public class App {
     CommandLine commandLine = new CommandLine(new BackupDB());
     commandLine.getCommandSpec().usageMessage().longOptionsMaxWidth(60);
 
+    if (args.length < 1) {
+      commandLine.usage(System.out);
+      return;
+    }
+
     commandLine.parseArgs(args);
     if (commandLine.isUsageHelpRequested()) {
       commandLine.usage(System.out);
