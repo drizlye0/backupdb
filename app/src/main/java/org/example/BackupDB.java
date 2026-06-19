@@ -50,18 +50,28 @@ public class BackupDB implements Callable<Integer> {
     DBCredentials credentials = new DBCredentials(host, port, username, password, dbName);
 
     Provider provider = Provider.fromString(prov);
-    try (Connection conn = ConnectionProxy.getConnection(credentials, provider)) {
-      DatabaseProvider db = getDatabaseProvider(provider, conn);
-      NioStorage store = new NioStorage();
-
-      BackupService backupService = new BackupService(db, store);
-      backupService.BackupAllTables(dbName, path);
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
+    if (provider == Provider.UNKNOW_DB) {
+      System.err.println("Unknow DB: " + prov);
       return 1;
     }
 
-    return 0;
+    try (Connection conn = ConnectionProxy.getConnection(credentials, provider)) {
+      DatabaseProvider db = getDatabaseProvider(provider, conn);
+
+      if (db == null) {
+        System.err.println("Null Database Provider");
+        return 1;
+      }
+
+      NioStorage store = new NioStorage();
+      BackupService backupService = new BackupService(db, store);
+
+      return backupService.BackupAllTables(dbName, path);
+
+    } catch (Exception e) {
+      System.err.println("Failed to establish a db connection. " + e.getMessage());
+      return 1;
+    }
   }
 
   private DatabaseProvider getDatabaseProvider(Provider provider, Connection conn) {

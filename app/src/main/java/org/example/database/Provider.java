@@ -6,7 +6,8 @@ package org.example.database;
 public enum Provider {
   MYSQL,
   POSTGRESQL,
-  SQLITE;
+  SQLITE,
+  UNKNOW_DB;
 
   public static Provider fromString(String value) {
     return switch (value.toLowerCase()) {
@@ -14,7 +15,7 @@ public enum Provider {
       case "postgresql" -> POSTGRESQL;
       case "postgres" -> POSTGRESQL;
       case "sqlite" -> SQLITE;
-      default -> throw new IllegalArgumentException("Unknow DB: " + value);
+      default -> UNKNOW_DB;
     };
   }
 }

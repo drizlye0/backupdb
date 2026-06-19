@@ -23,6 +23,7 @@ public class App {
       return;
     }
 
-    commandLine.execute(args);
+    int exitCode = commandLine.execute(args);
+    System.exit(exitCode);
   }
 }

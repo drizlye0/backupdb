@@ -7,34 +7,28 @@ import java.nio.file.Paths;
 
 public class NioStorage implements FileStore {
   @Override
-  public Path CreateFolder(String name, Path path) {
-    try {
-      Path baseDir = (path == null) ? Paths.get("").toAbsolutePath() : path;
-      if (Files.notExists(baseDir)) {
-        throw new IllegalArgumentException("Invalid path: " + path);
-      }
-      Path p = baseDir.resolve(name);
-      if (Files.notExists(p)) {
-        Files.createDirectory(p);
-      }
+  public Path CreateFolder(String name, Path path) throws IOException {
+    Path baseDir = (path == null) ? Paths.get("").toAbsolutePath() : path;
 
-      return p;
-    } catch (IOException e) {
-      throw new RuntimeException(e.getMessage());
+    if (Files.notExists(baseDir)) {
+      return null;
     }
+
+    Path p = baseDir.resolve(name);
+    if (Files.notExists(p)) {
+      Files.createDirectory(p);
+    }
+
+    return p;
   }
 
   @Override
-  public void CreateSQLFile(Path path, String name, String content) {
+  public void CreateSQLFile(Path path, String name, String content) throws IOException {
     String fileName = name + ".sql";
 
-    try {
-      Path baseDir = (path == null) ? Paths.get("").toAbsolutePath() : path;
-      Path p = baseDir.resolve(fileName);
-      Files.write(p, content.getBytes());
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage());
-    }
+    Path baseDir = (path == null) ? Paths.get("").toAbsolutePath() : path;
+    Path p = baseDir.resolve(fileName);
+    Files.write(p, content.getBytes());
   }
 
   @Override

@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.io.IOException;
 import java.nio.file.Path;
 import org.example.database.DatabaseProvider;
 
@@ -13,17 +14,29 @@ public class BackupService {
     this.store = store;
   }
 
-  public void BackupAllTables(String dbName, Path path) {
-    Path folderPath = this.store.CreateFolder("tables", path);
-    ArrayList<String> tables = this.dbProvider.ShowTables(dbName);
+  public int BackupAllTables(String dbName, Path path) {
+    try {
+      Path folderPath = this.store.CreateFolder("tables", path);
+      if (folderPath == null) {
+        System.err.println("Invalid Path");
+        return 1;
+      }
 
-    for (String table : tables) {
-      String createSt = this.dbProvider.ShowCreateTable(table);
+      ArrayList<String> tables = this.dbProvider.ShowTables(dbName);
 
-      String content = String.format("%s", createSt);
+      for (String table : tables) {
+        String createSt = this.dbProvider.ShowCreateTable(table);
 
-      this.store.CreateSQLFile(folderPath, table, content);
+        String content = String.format("%s", createSt);
+
+        this.store.CreateSQLFile(folderPath, table, content);
+      }
+    } catch (IOException e) {
+      System.err.println("Failed to backup tables. " + e.getMessage());
+      return 1;
     }
+
+    return 0;
   }
 
 }

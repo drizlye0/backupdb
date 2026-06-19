@@ -13,7 +13,7 @@ public class ConnectionProxy {
       case POSTGRESQL -> getPostgresSQLConnection(credentials);
       case MYSQL -> getMySQLConnection(credentials);
       case SQLITE -> null;
-      default -> null;
+      default -> throw new SQLException("Invalid DB");
     };
   }
 
