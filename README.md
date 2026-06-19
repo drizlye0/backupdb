@@ -37,6 +37,15 @@ backups/
     └── users.sql
 ```
 
+# Databases support
+- [x] PostgreSQL
+- [x] MySQL/MariaDB
+- [ ] SQLite
+- [ ] MongoDB
+- [ ] Oracle
+- [ ] SQL Server
+
+
 # Build
 ## Requirements
 - Java 25+ (with GraalVM)
