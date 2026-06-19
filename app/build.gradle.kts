@@ -38,6 +38,7 @@ java {
 
 graalvmNative {
   binaries.named("main") {
+      imageName.set("backupdb")
       buildArgs.add("-Os")
       buildArgs.add("-H:+BuildReport")
   }
