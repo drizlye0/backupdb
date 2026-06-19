@@ -20,7 +20,7 @@ public class PostgresSQLProviderTest {
   }
 
   @Test
-  void testShowCreateTable() {
+  void testShowCreateTable() throws SQLException {
     try (Connection conn = getDBConnection()) {
       assertNotNull(conn);
       PostgreSQLProvider provider = new PostgreSQLProvider(conn);
@@ -28,13 +28,11 @@ public class PostgresSQLProviderTest {
       String query = provider.ShowCreateTable("users");
       assertNotNull(query);
       System.out.println(query);
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
     }
   }
 
   @Test
-  void testShowTables() {
+  void testShowTables() throws SQLException {
     try (Connection conn = getDBConnection()) {
       assertNotNull(conn);
 
@@ -42,8 +40,6 @@ public class PostgresSQLProviderTest {
       ArrayList<String> tables = provider.ShowTables("backupdb");
 
       assertNotNull(tables);
-    } catch (Exception e) {
-
     }
   }
 }

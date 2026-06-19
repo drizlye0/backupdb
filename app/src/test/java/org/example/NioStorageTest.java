@@ -14,7 +14,7 @@ class NioStorageTest {
   Path tempDir;
 
   @Test
-  void testCreateFolderWithValidPath() {
+  void testCreateFolderWithValidPath() throws IOException {
     NioStorage storage = new NioStorage();
     Path folder = storage.CreateFolder("testFolder", tempDir);
 
