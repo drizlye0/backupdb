@@ -7,7 +7,7 @@ public enum Provider {
   MYSQL,
   POSTGRESQL,
   SQLITE,
-  UNKNOW_DB;
+  UNKNOWN_DB;
 
   public static Provider fromString(String value) {
     return switch (value.toLowerCase()) {
@@ -15,7 +15,7 @@ public enum Provider {
       case "postgresql" -> POSTGRESQL;
       case "postgres" -> POSTGRESQL;
       case "sqlite" -> SQLITE;
-      default -> UNKNOW_DB;
+      default -> UNKNOWN_DB;
     };
   }
 }
