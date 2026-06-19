@@ -11,7 +11,7 @@ public class NioStorage implements FileStore {
     Path baseDir = (path == null) ? Paths.get("").toAbsolutePath() : path;
 
     if (Files.notExists(baseDir)) {
-      return null;
+      throw new IOException("Directory does not exist: " + baseDir);
     }
 
     Path p = baseDir.resolve(name);

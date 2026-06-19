@@ -3,6 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.sql.SQLException;
 import org.example.database.DatabaseProvider;
 
 public class BackupService {
@@ -17,10 +18,6 @@ public class BackupService {
   public int BackupAllTables(String dbName, Path path) {
     try {
       Path folderPath = this.store.CreateFolder("tables", path);
-      if (folderPath == null) {
-        System.err.println("Invalid Path");
-        return 1;
-      }
 
       ArrayList<String> tables = this.dbProvider.ShowTables(dbName);
 
@@ -31,7 +28,7 @@ public class BackupService {
 
         this.store.CreateSQLFile(folderPath, table, content);
       }
-    } catch (IOException e) {
+    } catch (IOException | SQLException e) {
       System.err.println("Failed to backup tables. " + e.getMessage());
       return 1;
     }

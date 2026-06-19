@@ -50,7 +50,7 @@ public class BackupDB implements Callable<Integer> {
     DBCredentials credentials = new DBCredentials(host, port, username, password, dbName);
 
     Provider provider = Provider.fromString(prov);
-    if (provider == Provider.UNKNOW_DB) {
+    if (provider == Provider.UNKNOWN_DB) {
       System.err.println("Unknow DB: " + prov);
       return 1;
     }
@@ -69,7 +69,7 @@ public class BackupDB implements Callable<Integer> {
       return backupService.BackupAllTables(dbName, path);
 
     } catch (Exception e) {
-      System.err.println("Failed to establish a db connection. " + e.getMessage());
+      System.err.println("Backup failed: " + e.getMessage());
       return 1;
     }
   }
