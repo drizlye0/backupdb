@@ -8,6 +8,7 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id("org.graalvm.buildtools.native") version "1.1.1";
 }
 
 repositories {
@@ -18,11 +19,12 @@ repositories {
 dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation(libs.junit.jupiter)
-testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // This dependency is used by the application.
     implementation(libs.guava)
     implementation("info.picocli:picocli:4.7.7")
+    annotationProcessor("info.picocli:picocli-codegen:4.7.7")
     implementation("com.mysql:mysql-connector-j:9.7.0")
     implementation("org.postgresql:postgresql:42.7.3")
 }
@@ -45,4 +47,8 @@ tasks.named<Test>("test") {
     testLogging {
       events("standardOut", "standardError")
     }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+  options.compilerArgs.add("-Aproject=${project.group}/${project.name}")
 }
