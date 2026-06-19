@@ -37,3 +37,16 @@ backups/
     └── users.sql
 ```
 
+# Build
+## Requirements
+- Java 25+ (with GraalVM)
+- Git
+
+### To build
+clone the repostory and execute
+
+``` shell
+./gradlew nativeCompile
+```
+
+The build binary can be found in `app/build/native/nativeCompile/`
