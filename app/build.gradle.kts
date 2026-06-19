@@ -36,6 +36,13 @@ java {
     }
 }
 
+graalvmNative {
+  binaries.named("main") {
+      buildArgs.add("-Os")
+      buildArgs.add("-H:+BuildReport")
+  }
+}
+
 application {
     // Define the main class for the application.
     mainClass = "org.example.App"
