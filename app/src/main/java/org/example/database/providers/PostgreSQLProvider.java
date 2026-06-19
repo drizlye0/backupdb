@@ -8,9 +8,6 @@ import java.util.ArrayList;
 
 import org.example.database.DatabaseProvider;
 
-/**
- * PosgreSQLProvider
- */
 public class PostgreSQLProvider implements DatabaseProvider {
   private final Connection conn;
 
@@ -34,7 +31,7 @@ public class PostgreSQLProvider implements DatabaseProvider {
   }
 
   @Override
-  public String ShowCreateTable(String table) {
+  public String ShowCreateTable(String table) throws SQLException {
     String sql = """
         SELECT
             column_name,
@@ -44,7 +41,7 @@ public class PostgreSQLProvider implements DatabaseProvider {
         FROM
             information_schema.columns
         WHERE
-            table_schema = 'public' -- Change if using a custom schema
+            table_schema = 'public'
             AND table_name = ?
         ORDER BY
             ordinal_position;
@@ -52,21 +49,16 @@ public class PostgreSQLProvider implements DatabaseProvider {
 
     StringBuilder query = new StringBuilder("CREATE TABLE " + table + "(");
 
-    try {
-      PreparedStatement st = conn.prepareStatement(sql);
+    try (PreparedStatement st = conn.prepareStatement(sql)) {
       st.setString(1, table);
-      ResultSet rs = st.executeQuery();
-
-      while (rs.next()) {
-        String columnQuery = getColumnQuery(rs);
-        query.append(columnQuery).append(",");
+      try (ResultSet rs = st.executeQuery()) {
+        while (rs.next()) {
+          String columnQuery = getColumnQuery(rs);
+          query.append(columnQuery).append(",");
+        }
       }
-
       query.deleteCharAt(query.length() - 1);
       query.append(");");
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
-      System.exit(1);
     }
 
     return query.toString();
@@ -74,12 +66,11 @@ public class PostgreSQLProvider implements DatabaseProvider {
 
   @Override
   public String ShowInsertInto(String table) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException("ShowInsertInto is not yet implemented for PostgreSQL");
   }
 
   @Override
-  public ArrayList<String> ShowTables(String database) {
+  public ArrayList<String> ShowTables(String database) throws SQLException {
     String sql = """
         SELECT table_name
         FROM information_schema.tables
@@ -89,22 +80,15 @@ public class PostgreSQLProvider implements DatabaseProvider {
 
     ArrayList<String> tables = new ArrayList<String>();
 
-    try {
-      PreparedStatement st = conn.prepareStatement(sql);
-      ResultSet rs = st.executeQuery();
-
+    try (PreparedStatement st = conn.prepareStatement(sql);
+         ResultSet rs = st.executeQuery()) {
       while (rs.next()) {
         tables.add(rs.getString("table_name"));
       }
-
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-      System.exit(0);
     }
 
     return tables;
   }
 
 }
-
 // PostgresSQLProvider implementation placeholder

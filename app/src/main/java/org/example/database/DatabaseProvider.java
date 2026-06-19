@@ -1,15 +1,12 @@
 package org.example.database;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- * DatabaseProvider
- */
-
 public interface DatabaseProvider {
-  public ArrayList<String> ShowTables(String database);
+  ArrayList<String> ShowTables(String database) throws SQLException;
 
-  public String ShowCreateTable(String table);
+  String ShowCreateTable(String table) throws SQLException;
 
-  public String ShowInsertInto(String table);
+  String ShowInsertInto(String table) throws SQLException;
 }
